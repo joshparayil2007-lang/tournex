@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TOURNEX — eFootball Tournament Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════ NAV ════════════════════ -->
+<nav class="nav" id="nav" style="display:none">
+  <div class="nav-logo" onclick="goHome()">TOURN<span>EX</span></div>
+  <div class="nav-right">
+    <div class="av-wrap">
+      <button class="av-btn" id="av-btn" onclick="toggleMenu(event)">?</button>
+      <div class="av-menu" id="av-menu">
+        <div class="av-head">
+          <div class="av-uname" id="av-uname">—</div>
+          <div class="av-email" id="av-email">—</div>
+        </div>
+        <div class="av-div"></div>
+        <button class="av-item" onclick="openEditProfile()">✏️ Edit Profile</button>
+        <button class="av-item" onclick="switchP('completed');go('profile')">🏆 Completed Tournaments</button>
+        <div class="av-div"></div>
+        <button class="av-item danger" onclick="doLogout()">⏻ Sign Out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════ PAGE 1: LANDING ════════════════════ -->
+<div class="page show" id="pg-landing">
+  <div class="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-badge">⚽ eFootball Tournament Platform</div>
+    <h1 class="hero-title">TOURN<span>EX</span></h1>
+    <p class="hero-sub">Where Champions Are Made</p>
+    <p class="hero-desc">Create and manage League, Knockout &amp; Group Stage tournaments with live standings, score entry, Golden Boot, Golden Glove awards, and a champions ceremony.</p>
+    <div class="hero-btns">
+      <button class="btn btn-gold" onclick="goAuth()">Get Started</button>
+    </div>
+    <div class="hero-feats">
+      <div><div class="hf-icon">📋</div><div class="hf-lbl">League</div></div>
+      <div><div class="hf-icon">⚡</div><div class="hf-lbl">Knockout</div></div>
+      <div><div class="hf-icon">🌍</div><div class="hf-lbl">Group Stage</div></div>
+      <div><div class="hf-icon">📊</div><div class="hf-lbl">Live Standings</div></div>
+      <div><div class="hf-icon">👟</div><div class="hf-lbl">Golden Boot</div></div>
+      <div><div class="hf-icon">🧤</div><div class="hf-lbl">Golden Glove</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 2: AUTH ════════════════════ -->
+<div class="page" id="pg-auth">
+  <div class="auth-box">
+    <div class="auth-logo">TOURNEX</div>
+    <div class="auth-sub">eFootball Tournament Platform</div>
+
+    <div class="atabs">
+      <button class="atab on" id="at-login" onclick="switchA('login')">Sign In</button>
+      <button class="atab" id="at-reg" onclick="switchA('register')">Register</button>
+    </div>
+
+    <!-- ── SIGN IN ── Email + Password -->
+    <div class="aform on" id="af-login">
+      <div class="err-box" id="lerr"></div>
+      <div class="ig">
+        <label class="lbl">Email</label>
+        <input class="inp" type="email" id="lu" placeholder="your@email.com">
+      </div>
+      <div class="ig">
+        <label class="lbl">Password</label>
+        <input class="inp" type="password" id="lp" placeholder="Password">
+      </div>
+      <button class="btn btn-gold" style="width:100%;margin-top:.4rem" onclick="doLogin()">Sign In →</button>
+      <div class="afoot">No account? <a onclick="switchA('register')">Register now</a></div>
+    </div>
+
+    <!-- ── REGISTER ── Username + Email + Password -->
+    <div class="aform" id="af-reg">
+      <div class="err-box" id="rerr"></div>
+      <div class="ig">
+        <label class="lbl">Username</label>
+        <input class="inp" type="text" id="ru" placeholder="Choose a username">
+      </div>
+      <div class="ig">
+        <label class="lbl">Email</label>
+        <input class="inp" type="email" id="re" placeholder="your@email.com">
+      </div>
+      <div class="ig">
+        <label class="lbl">Password</label>
+        <input class="inp" type="password" id="rp" placeholder="Min 6 characters">
+      </div>
+      <button class="btn btn-gold" style="width:100%;margin-top:.4rem" onclick="doReg()">Create Account →</button>
+      <div class="afoot">Have an account? <a onclick="switchA('login')">Sign in</a></div>
+    </div>
+
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="back-btn" onclick="go('landing')">← Back to home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 3: WELCOME ════════════════════ -->
+<div class="page" id="pg-welcome">
+  <div class="wbg"></div>
+  <div class="wbg-overlay"></div>
+  <div class="wc">
+    <div class="w-hello">Welcome to TOURNEX</div>
+    <div class="w-name" id="w-username">Champion</div>
+    <div class="w-tagline">Your eFootball Tournament Awaits</div>
+    <div class="w-create-btn">
+      <button class="btn btn-gold" onclick="go('create')">⚽ Create Tournament</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 4: CREATE WIZARD ════════════════════ -->
+<div class="page" id="pg-create">
+  <div class="cwrap">
+    <button class="back-btn" onclick="go('welcome')">← Back to Home</button>
+    <h1 class="ph1">Create Tournament</h1>
+    <p class="ph2">Set up your tournament step by step</p>
+    <div class="steps">
+      <div class="si on" id="si1"><span class="sn">01</span>Details</div>
+      <div class="si" id="si2"><span class="sn">02</span>Format</div>
+      <div class="si" id="si3"><span class="sn">03</span>Count</div>
+      <div class="si" id="si4"><span class="sn">04</span>Players</div>
+      <div class="si" id="si5"><span class="sn">05</span>Preview</div>
+    </div>
+
+    <!-- Step 1: Name -->
+    <div class="sp on" id="sp1">
+      <div class="ig"><label class="lbl">Tournament Name</label><input class="inp" type="text" id="tname" placeholder="e.g. Premier Cup 2025"></div>
+      <div class="snav"><button class="btn btn-gold" onclick="s1()">Next →</button></div>
+    </div>
+
+    <!-- Step 2: Format -->
+    <div class="sp" id="sp2">
+      <div class="fmt-grid">
+        <div class="fc" id="fc-league" onclick="pickFmt('league')"><div class="fc-icon">📋</div><div class="fc-name">League</div><div class="fc-desc">Every team vs every other. Table topper wins.</div></div>
+        <div class="fc" id="fc-knockout" onclick="pickFmt('knockout')"><div class="fc-icon">⚡</div><div class="fc-name">Knockout</div><div class="fc-desc">Single elimination. Rounds auto-advance.</div></div>
+        <div class="fc" id="fc-group" onclick="pickFmt('group')"><div class="fc-icon">🌍</div><div class="fc-name">Group Stage</div><div class="fc-desc">Groups → Knockout. World Cup format.</div></div>
+      </div>
+      <div class="rule-box" id="rule-box"></div>
+      <div class="snav"><button class="btn btn-outline" onclick="gs(1)">← Back</button><button class="btn btn-gold" onclick="s2()">Next →</button></div>
+    </div>
+
+    <!-- Step 3: Count + League round selector + Group qualifier picker -->
+    <div class="sp" id="sp3">
+      <div class="pinfo-box" id="pinfo-box">—</div>
+
+      <!-- League-only: 1 or 2 rounds -->
+      <div id="league-rounds-box" style="display:none;margin-bottom:1.3rem">
+        <label class="lbl" style="margin-bottom:.8rem;display:block">How many times should each team face every other team?</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="fc" id="lr-1" onclick="pickLeagueRounds(1)">
+            <div class="fc-icon">🔁</div>
+            <div class="fc-name">1 Round</div>
+            <div class="fc-desc">Each pair plays once. e.g. 10 teams = <strong>9 matchdays</strong>, 45 total matches.</div>
+          </div>
+          <div class="fc" id="lr-2" onclick="pickLeagueRounds(2)">
+            <div class="fc-icon">⚽</div>
+            <div class="fc-name">2 Rounds (Home &amp; Away)</div>
+            <div class="fc-desc">Home &amp; away legs. e.g. 20 teams = <strong>38 matchdays</strong>, 380 total matches. Like the Premier League.</div>
+          </div>
+        </div>
+        <div class="perr" id="lrerr" style="margin-top:.5rem"></div>
+      </div>
+
+      <!-- Group Stage only: smart combination picker -->
+      <div id="group-qual-box" style="display:none;margin-bottom:1.3rem">
+        <div style="background:rgba(212,175,55,.06);border:1px solid var(--gold-dim);border-left:3px solid var(--gold);padding:.9rem 1.1rem;margin-bottom:1rem;border-radius:2px;font-size:.8rem;color:var(--wd);line-height:1.6">
+          <strong style="color:var(--gold)">Group Stage Rules:</strong> The total number of qualifiers (groups × qualifiers per group) <strong style="color:var(--white)">must equal a power of 2</strong> (4, 8, 16, 32) so every team plays a fair knockout. Enter your team count below and valid options will appear automatically.
+        </div>
+        <div id="group-combos-list" style="margin-bottom:.9rem"></div>
+        <div style="background:rgba(39,174,96,.06);border:1px solid rgba(39,174,96,.3);padding:.65rem 1rem;font-size:.73rem;color:#2ECC71;border-radius:2px;line-height:1.5">
+          <strong>Tiebreaker (UEFA/FIFA):</strong> 1. Points &nbsp;2. Goal Difference &nbsp;3. Goals Scored &nbsp;4. Head-to-Head Pts &nbsp;5. H2H GD &nbsp;6. H2H Goals For &nbsp;7. Alphabetical
+        </div>
+      </div>
+      <div class="ig">
+        <label class="lbl" id="pcount-lbl">Number of Teams</label>
+        <input class="inp" type="number" id="pcount" min="2" max="64" placeholder="e.g. 20" style="font-family:'Orbitron',sans-serif;font-size:1.1rem;text-align:center;max-width:180px" oninput="updatePInfoBox()">
+      </div>
+      <div class="perr" id="pcerr"></div>
+      <div class="snav"><button class="btn btn-outline" onclick="gs(2)">← Back</button><button class="btn btn-gold" onclick="s3()">Next →</button></div>
+    </div>
+
+    <!-- Step 4: Player names -->
+    <div class="sp" id="sp4">
+      <div class="pinfo-box" id="pinfo2">—</div>
+      <div class="p-list" id="plist"></div>
+      <div class="perr" id="perr"></div>
+      <div class="snav"><button class="btn btn-outline" onclick="gs(3)">← Back</button><button class="btn btn-gold" onclick="s4()">Generate Fixtures →</button></div>
+    </div>
+
+    <!-- Step 5: Preview -->
+    <div class="sp" id="sp5">
+      <div id="prev-out"></div>
+      <div class="snav" style="margin-top:2rem">
+        <button class="btn btn-outline" onclick="gs(4)">← Back</button>
+        <button class="btn btn-gold" onclick="saveTour()">💾 Save &amp; Open Tournament</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 5: MANAGE ════════════════════ -->
+<div class="page" id="pg-manage">
+  <div class="mwrap">
+    <button class="back-btn" onclick="go('welcome')">← Back to Home</button>
+    <div class="tour-hdr">
+      <div class="th-name" id="th-name">—</div>
+      <div class="th-meta" id="th-meta"></div>
+    </div>
+    <div class="tab-bar">
+      <button class="tbtn on" id="tb-overview" onclick="stab('overview')"><span class="ti">🏠</span>Overview</button>
+      <button class="tbtn" id="tb-fixtures" onclick="stab('fixtures')"><span class="ti">📋</span>Fixtures</button>
+      <button class="tbtn" id="tb-standings" onclick="stab('standings')"><span class="ti">📊</span>Standings</button>
+      <button class="tbtn" id="tb-scores" onclick="stab('scores')"><span class="ti">⚽</span>Enter Scores</button>
+      <button class="tbtn" id="tb-awards" onclick="stab('awards')"><span class="ti">🏆</span>Awards</button>
+    </div>
+    <div class="tpanel on" id="tp-overview"></div>
+    <div class="tpanel" id="tp-fixtures"></div>
+    <div class="tpanel" id="tp-standings"></div>
+    <div class="tpanel" id="tp-scores"></div>
+    <div class="tpanel" id="tp-awards"></div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 6: HOME LIST ════════════════════ -->
+<div class="page" id="pg-home">
+  <div class="hwrap">
+    <h1 style="font-family:'Cinzel',serif;font-size:1.7rem;color:var(--white);margin-bottom:.2rem">Hello, <span style="color:var(--gold)" id="h-uname">Champion</span></h1>
+    <p style="font-size:.82rem;color:var(--wd);margin-bottom:1.5rem">Manage your tournaments below</p>
+    <div style="background:var(--b3);border:1px solid var(--bord);border-left:3px solid var(--gold);padding:1.1rem 1.5rem;margin-bottom:1.5rem;border-radius:2px">
+      <p style="font-family:'Cinzel',serif;color:var(--gold);font-size:.9rem;margin-bottom:.4rem;letter-spacing:.08em">⚽ TOURNEX — eFootball Edition</p>
+      <p style="font-size:.83rem;color:var(--wd);line-height:1.75">Create <strong style="color:var(--gold)">League</strong>, <strong style="color:var(--gold)">Knockout</strong> or <strong style="color:var(--gold)">Group Stage</strong> tournaments. Enter match scores, track live standings, earn <strong style="color:var(--gold)">Golden Boot</strong> &amp; <strong style="color:var(--gold)">Golden Glove</strong> awards, and crown your champion.</p>
+    </div>
+    <div class="stat-row" id="h-stats"></div>
+    <button class="new-btn" onclick="go('create')">
+      <div class="ntb-icon">⚔️</div>
+      <div class="ntb-title">Create New Tournament</div>
+      <div class="ntb-sub">League · Knockout · Group Stage</div>
+    </button>
+    <div class="sec-title">Your Tournaments</div>
+    <div class="tour-grid" id="tour-grid"></div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 7: WINNERS ════════════════════ -->
+<div class="page" id="pg-winners">
+  <div class="win-bg"></div>
+  <canvas class="confetti-c" id="conf-c"></canvas>
+  <div class="win-content">
+    <div class="win-pre">🎉 Tournament Complete 🎉</div>
+    <div class="win-tourname" id="wt-name">—</div>
+    <div class="win-sub">Final Results &amp; Awards</div>
+    <div class="trophy">🏆</div>
+    <div class="champ-box">
+      <div class="champ-lbl">🥇 Tournament Champion</div>
+      <div class="champ-name" id="wt-champ">—</div>
+    </div>
+    <div class="win-awards" id="wt-awards"></div>
+    <div class="win-actions">
+      <button class="btn btn-gold" onclick="go('welcome')">🏠 Main Menu</button>
+      <button class="btn btn-outline" onclick="openManage(lastWinTid)">📋 Full Fixtures</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ PAGE 8: PROFILE ════════════════════ -->
+<div class="page" id="pg-profile">
+  <div class="prof-wrap">
+    <button class="back-btn" onclick="go('welcome')">← Back to Home</button>
+    <div class="prof-hdr">
+      <div class="prof-av" id="pav">C</div>
+      <div>
+        <h2 style="font-family:'Cinzel',serif;font-size:1.35rem;margin-bottom:.18rem" id="p-uname">—</h2>
+        <p style="font-size:.82rem;color:var(--wd)" id="p-email">—</p>
+        <p style="font-size:.7rem;color:var(--gold);margin-top:.22rem;letter-spacing:.08em">ELITE MEMBER</p>
+      </div>
+    </div>
+    <div class="ptabs">
+      <button class="ptab on" onclick="switchP('tours')">🏆 All Tournaments</button>
+      <button class="ptab" onclick="switchP('completed')">🥇 Completed</button>
+      <button class="ptab" onclick="switchP('settings')">⚙️ Edit Profile</button>
+    </div>
+    <div class="ppanel on" id="pp-tours"></div>
+    <div class="ppanel" id="pp-completed"></div>
+    <div class="ppanel" id="pp-settings">
+      <div style="background:var(--b3);border:1px solid var(--bord);padding:1.5rem;border-radius:4px;max-width:460px">
+        <div class="sec-title">Account Details</div>
+        <div class="err-box" id="pe-err"></div>
+        <div class="ok-box" id="pe-ok">Profile updated successfully! ✓</div>
+        <div class="ig"><label class="lbl">Username</label><input class="inp" type="text" id="s-uname"></div>
+        <div class="ig"><label class="lbl">Email</label><input class="inp" type="email" id="s-email"></div>
+        <div class="gd"></div>
+        <div class="sec-title" style="font-size:.85rem">Change Password <span style="color:var(--wd);font-weight:400;font-family:'Raleway',sans-serif;letter-spacing:0;text-transform:none;font-size:.78rem">(optional)</span></div>
+        <div class="ig"><label class="lbl">Current Password</label><input class="inp" type="password" id="s-oldpw" placeholder="Enter current password"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+          <div class="ig"><label class="lbl">New Password</label><input class="inp" type="password" id="s-newpw" placeholder="Min 6 characters"></div>
+          <div class="ig"><label class="lbl">Confirm New</label><input class="inp" type="password" id="s-cpw" placeholder="Confirm new password"></div>
+        </div>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+          <button class="btn btn-gold btn-sm" onclick="saveProfile()">Save Changes</button>
+          <button class="btn btn-red btn-sm" onclick="doLogout()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ EDIT PROFILE MODAL ════════════════════ -->
+<div class="dlg" id="ep-dlg">
+  <div class="dlg-box ep-box">
+    <div class="dlg-title" style="color:var(--gold)">✏️ Edit Profile</div>
+    <div class="err-box" id="ep-err"></div>
+    <div class="ok-box" id="ep-ok">Profile updated! ✓</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+      <div class="ig"><label class="lbl">Username</label><input class="inp" type="text" id="ep-uname"></div>
+      <div class="ig"><label class="lbl">Email</label><input class="inp" type="email" id="ep-email"></div>
+    </div>
+    <div style="background:var(--b4);border:1px solid var(--bord);border-left:3px solid var(--gold);padding:.8rem 1rem;margin-bottom:1rem;border-radius:2px">
+      <p style="font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;font-weight:700">Change Password <span style="color:var(--wd);font-weight:400">— optional</span></p>
+      <div class="ig" style="margin-bottom:.65rem"><label class="lbl">Current Password</label><input class="inp" type="password" id="ep-oldpw" placeholder="Required to change password"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
+        <div class="ig"><label class="lbl">New Password</label><input class="inp" type="password" id="ep-newpw" placeholder="Min 6 chars"></div>
+        <div class="ig"><label class="lbl">Confirm New</label><input class="inp" type="password" id="ep-cpw" placeholder="Confirm"></div>
+      </div>
+    </div>
+    <div class="dlg-btns">
+      <button class="btn btn-gold btn-sm" onclick="saveEditProfile()">Save Changes</button>
+      <button class="btn btn-outline btn-sm" onclick="closeDlg('ep-dlg')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="dlg" id="conf-dlg">
+  <div class="dlg-box">
+    <div class="dlg-title" id="conf-title">Confirm</div>
+    <div class="dlg-msg" id="conf-msg">Are you sure?</div>
+    <div class="dlg-btns">
+      <button class="btn btn-red btn-sm" id="conf-yes">Confirm</button>
+      <button class="btn btn-outline btn-sm" onclick="closeDlg('conf-dlg')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
