@@ -16,29 +16,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-tournex-key-123';
 
-let memoryServer;
-
 async function connectDB() {
-    let uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/tournex';
+    const uri = process.env.MONGODB_URI;
     
-    // Fallback to in-memory server if local MongoDB is not running
-    if (uri.includes('127.0.0.1') && process.env.NODE_ENV !== 'production') {
-        try {
-            const { MongoMemoryServer } = require('mongodb-memory-server');
-            memoryServer = await MongoMemoryServer.create();
-            uri = memoryServer.getUri();
-            console.log('Using in-memory MongoDB for local development');
-        } catch (e) {
-            console.warn('Could not start in-memory MongoDB, relying on process.env.MONGODB_URI');
-        }
+    if (!uri) {
+        console.error("FATAL: MONGODB_URI environment variable is missing on Railway!");
     }
     
     try {
         mongoose.connection.on('disconnected', () => console.log('Mongoose disconnected'));
         mongoose.connection.on('error', err => console.log('Mongoose error', err));
         
-        await mongoose.connect(uri, { dbName: 'tournex' });
-        console.log('Connected to MongoDB at', uri);
+        await mongoose.connect(uri || 'mongodb://127.0.0.1:27017/tournex', { dbName: 'tournex' });
+        console.log('Connected to MongoDB at', uri ? 'Remote Atlas URI' : 'Localhost Fallback');
         console.log('Connection readyState:', mongoose.connection.readyState);
     } catch (err) {
         console.error('MongoDB connection error:', err);
@@ -244,6 +234,6 @@ app.delete('/api/tournaments/:id', authenticateToken, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log('Server running on http://localhost:' + PORT);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log('Server running on port ' + PORT);
 });
