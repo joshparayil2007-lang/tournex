@@ -20,21 +20,32 @@ async function connectDB() {
     // For Vercel Serverless: don't reconnect if already connected
     if (mongoose.connection.readyState >= 1) return;
 
-    const uri = process.env.MONGODB_URI;
+    let uri = process.env.MONGODB_URI;
     
     if (!uri) {
-        console.error("FATAL: MONGODB_URI environment variable is missing on Railway!");
+        console.error("FATAL: MONGODB_URI environment variable is missing on Render/Railway! Falling back to in-memory...");
+        try {
+            const { MongoMemoryServer } = require('mongodb-memory-server');
+            const mongoServer = await MongoMemoryServer.create();
+            uri = mongoServer.getUri();
+            console.log("Using mongodb-memory-server as local fallback:", uri);
+        } catch (e) {
+            console.log("Could not load mongodb-memory-server. Falling back to localhost.");
+        }
     }
     
     try {
         mongoose.connection.on('disconnected', () => console.log('Mongoose disconnected'));
         mongoose.connection.on('error', err => console.log('Mongoose error', err));
         
-        await mongoose.connect(uri || 'mongodb://127.0.0.1:27017/tournex', { dbName: 'tournex' });
-        console.log('Connected to MongoDB at', uri ? 'Remote Atlas URI' : 'Localhost Fallback');
+        await mongoose.connect(uri || 'mongodb://127.0.0.1:27017/tournex', { 
+            dbName: 'tournex',
+            serverSelectionTimeoutMS: 5000
+        });
+        console.log('Connected to MongoDB at', uri ? (uri.includes('mongodb-memory') || uri.includes('127.0.0.1') ? 'Local/Memory DB' : 'Remote Uri') : 'Localhost Fallback');
         console.log('Connection readyState:', mongoose.connection.readyState);
     } catch (err) {
-        console.error('MongoDB connection error:', err);
+        console.error('MongoDB connection error. Please ensure MongoDB is running or MONGODB_URI is set.');
     }
 }
 
