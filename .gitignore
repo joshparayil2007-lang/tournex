@@ -1,0 +1,4 @@
+node_modules
+.env
+tournex.db
+.DS_Store
