@@ -17,6 +17,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-tournex-key-123';
 
 async function connectDB() {
+    // For Vercel Serverless: don't reconnect if already connected
+    if (mongoose.connection.readyState >= 1) return;
+
     const uri = process.env.MONGODB_URI;
     
     if (!uri) {
@@ -234,6 +237,12 @@ app.delete('/api/tournaments/:id', authenticateToken, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log('Server running on port ' + PORT);
-});
+// Only listen explicitly if NOT running on Vercel
+if (!process.env.VERCEL) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log('Server running on port ' + PORT);
+    });
+}
+
+// Export for Vercel Serverless Functions
+module.exports = app;
